@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+  "test-unit": "echo Running Unit Tests",
+  "test-playwright": "echo Running Playwright Tests"
   },
   "keywords": [],
   "author": "",
