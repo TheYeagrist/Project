@@ -1,19 +1,18 @@
 const { runAllTests } = require('../services/testRunner');
-const fs = require('fs');
-const path = require('path');
-
-const reportPath = path.join(__dirname, '..', 'report.json');
+const Report = require('../models/Report');
 
 exports.runTests = async (req, res) => {
-  const report = await runAllTests();
-  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-  res.json(report);
+  const reportData = await runAllTests();
+  const savedReport = await Report.create(reportData);
+  res.json(savedReport);
 };
 
-exports.getLatestReport = (req, res) => {
-  if (fs.existsSync(reportPath)) {
-    res.json(JSON.parse(fs.readFileSync(reportPath)));
-  } else {
-    res.json({ message: 'No report available yet.' });
-  }
+exports.getLatestReport = async (req, res) => {
+  const latest = await Report.findOne().sort({ timestamp: -1 });
+  res.json(latest || { message: "No reports found" });
+};
+
+exports.getAllReports = async (req, res) => {
+  const allReports = await Report.find().sort({ timestamp: -1 });
+  res.json(allReports);
 };
